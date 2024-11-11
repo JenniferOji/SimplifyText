@@ -36,7 +36,7 @@ public class WordEmbeddings {
                     embeddingValues[i - 1] = Double.parseDouble(sections[i]);
                 }
                 wordEmbeddings.put(word, embeddingValues);
-                //printing out the values in the embeddings file 
+                //printing out the values in the embedding file 
                 //System.out.println(word + " " + Arrays.toString(embeddingValues));
 
                 	
@@ -51,26 +51,23 @@ public class WordEmbeddings {
 	}
 	
 	
-
-	 public boolean finding(String word) {
+	//method to find a word and its embedding 
+	 public boolean find(String word) {
 	        if (wordEmbeddings.containsKey(word)) {
 	            double[] embeddings = wordEmbeddings.get(word);
 	            System.out.println(word + " " + Arrays.toString(embeddings));
+	            return true;
 	        } else {
 	            System.out.println("Word \"" + word + "\" not found in embeddings.");
 	        }
 			return false;
 	}
+
 	 
-	 public void find(String word, ConcurrentHashMap<String, double[]> googleWordEmbeddings){
-	        if (wordEmbeddings.containsKey(word)) {
-	            double[] gEmbeddings = wordEmbeddings.get(word);
-	            googleWordEmbeddings.put(word, gEmbeddings);
-	           // System.out.println(word + " " + Arrays.toString(gEmbeddings));
-	        }
-
-	}
-
+	 //method returning the embedding of specified word for the google1000 words  
+	 public double[] getEmbedding(String word) {
+	     return wordEmbeddings.get(word);
+	 }
 
 
 	/*public boolean containsWord(String word, ArrayList<String> googleWords, ConcurrentHashMap<String, double[]> googleWordEmbeddings) {

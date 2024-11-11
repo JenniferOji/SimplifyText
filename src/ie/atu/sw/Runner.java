@@ -4,16 +4,19 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.*;
-import java.util.Scanner;
 
 public class Runner {
+
 
 	public static void main(String[] args) throws Exception {
 		
 		//Variables 
 		Scanner input = new Scanner(System.in);
 		int choice;
-		
+		String text = "";
+	
+		String file1 = "../word-embeddings.txt";
+		String file2 = "../google-1000.txt";
 		//printing and reading from file 
 		File original = new File("output.txt");
 		
@@ -27,6 +30,7 @@ public class Runner {
         //Initializing the word embedding and google words class 
         WordEmbeddings embeddings = new WordEmbeddings();
         GoogleEmbeddings googleEmb = new GoogleEmbeddings();
+        Process process = new Process();
 
 		//You should put the following code into a menu or Menu class
 		System.out.println(ConsoleColour.BLACK);
@@ -43,7 +47,6 @@ public class Runner {
 		System.out.println("(5) Optional Extras...");
 		System.out.println("(6) Quit");
 		
-		
 		//Output a menu of options and solicit text from the user
 		System.out.print(ConsoleColour.BLACK);
 		//looping until the user enters a valid option 
@@ -58,7 +61,10 @@ public class Runner {
 		{
 			if(choice == 1) {
 				System.out.print("Please specify the path to the embeddings file: ");
-				String embeddingFilePath = input.next();
+//				String embeddingFilePath = input.next();
+				System.out.println();
+				String embeddingFilePath = file1;
+
 				embeddings.load(embeddingFilePath);
 				
 				do 
@@ -71,7 +77,9 @@ public class Runner {
 			
 			if(choice == 2) {
 				System.out.print("Please specify the path to the Google 1000 file: ");
-				String googleFilePath = input.next();
+//				String googleFilePath = input.next();
+				String googleFilePath = file2;
+				System.out.println();
 				googleEmb.load(googleFilePath, embeddings);
 				do 
 			    { 
@@ -100,8 +108,12 @@ public class Runner {
 			}
 			
 			if(choice == 4) {
-				System.out.println("");
+				System.out.print("Please specify the path to the text file: ");
+				String textFilePath = input.next();
+				System.out.println();
 
+				process.load(textFilePath, embeddings, googleEmb);
+				
 				 do 
 				 { 
 					 System.out.print("Select Option [1-6] : ");

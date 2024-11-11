@@ -5,6 +5,8 @@ import java.io.FileInputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class GoogleEmbeddings {	
@@ -35,7 +37,8 @@ public class GoogleEmbeddings {
                     System.out.println(googleWords.get(i));
                 }*/
                 
-                embeddings.find(word, googleWordEmbeddings);
+               // embeddings.find(word, googleWordEmbeddings);
+                getEmbedding(word, embeddings);
 
 			}
             System.out.println("Google1000 file loaded");
@@ -47,16 +50,31 @@ public class GoogleEmbeddings {
         }
 	}
 	
+	//method to get the embedding values 
+	public void getEmbedding(String word, WordEmbeddings embeddings) {
+	    double[] gEmbeddings = embeddings.getEmbedding(word);
+	    if (gEmbeddings != null) {
+	        googleWordEmbeddings.put(word, gEmbeddings);
+	        //System.out.println(word + " " + Arrays.toString(gEmbeddings)); // Print or remove as needed
+	    }
+	    
+	    else {
+	       // System.out.println("Embedding for \"" + word + "\" not found.");
+	    }
+	}
+	
+
+	//method to find a specified word 
 	 public boolean find(String word) {
 	        if (googleWordEmbeddings.containsKey(word)) {
 	            double[] embeddings = googleWordEmbeddings.get(word);
 	            System.out.println(word + " " + Arrays.toString(embeddings));
-	        } else {
+	        } 
+	        else {
 	            System.out.println("Word \"" + word + "\" not found in embeddings.");
 	        }
 			return false;
 	}
-	 
 	
 	
 }
