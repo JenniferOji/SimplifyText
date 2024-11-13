@@ -12,7 +12,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class GoogleEmbeddings {	
 
     ArrayList<String> googleWords = new ArrayList<>();
-    private ConcurrentHashMap<String, double[]> googleWordEmbeddings = new ConcurrentHashMap<>();
+    ConcurrentHashMap<String, double[]> googleWordEmbeddings = new ConcurrentHashMap<>();
 
 
 	 /**
@@ -75,6 +75,8 @@ public class GoogleEmbeddings {
 	        }
 			return false;
 	}
+	 
+	
 	
 	
 }

@@ -124,9 +124,9 @@ public class Runner {
 			
 			if(choice == 5) {
 				System.out.print("which word do you want to find ? : ");
-				String answer = input.next();
+				//String answer = input.next();
 				
-				googleEmb.find(answer);
+				//process.getEmbedding(answer, embeddings);
 				
 				 do 
 				 { 
