@@ -5,26 +5,19 @@ import java.io.FileWriter;
 import java.io.PrintWriter;
 import java.util.*;
 
-public class Runner {
 
+public class Runner{
 
-	public static void main(String[] args) throws Exception {
+	public static void main(String[] args) throws Exception{
 		
 		//Variables 
 		Scanner input = new Scanner(System.in);
 		int choice;
-		String text = "";
 	
 		String file1 = "../word-embeddings.txt";
 		String file2 = "../google-1000.txt";
-		//printing and reading from file 
-		File original = new File("output.txt");
 		
-        FileWriter fileWriter = new FileWriter(original);
-        //creating PrintWriter using the FileWriter
-        PrintWriter writer = new PrintWriter(fileWriter);
-        
-        boolean open_file = false;
+		//default file to print info to if user does not enter their own
         String outputFile = "output.txt";
         
         //Initializing the word embedding and google words class 
@@ -56,12 +49,12 @@ public class Runner {
 			choice = input.nextInt();
 		}while(choice <1 || choice >6);
 		
-		//looping until the user wants to close the program 
+		//looping until the user wants to choses to close the program if the number entered is anything but 1 - 6 
 		do 
 		{
 			if(choice == 1) {
 				System.out.print("Please specify the path to the embeddings file: ");
-//				String embeddingFilePath = input.next();
+				//String embeddingFilePath = input.next();
 				System.out.println();
 				String embeddingFilePath = file1;
 
@@ -77,7 +70,7 @@ public class Runner {
 			
 			if(choice == 2) {
 				System.out.print("Please specify the path to the Google 1000 file: ");
-//				String googleFilePath = input.next();
+				//String googleFilePath = input.next();
 				String googleFilePath = file2;
 				System.out.println();
 				googleEmb.load(googleFilePath, embeddings);
@@ -95,9 +88,8 @@ public class Runner {
 				outputFile = outputFile + ".txt";
 				System.out.println(outputFile);
 				
-				//creating a new file with the new name and re-initialisng the writer object 
-			    writer = new PrintWriter(new FileWriter(outputFile, true)); // Initialize writer with the new file for appending
-			    open_file = true;
+				//content already been written will be output to the file  
+			    //open_file = true;
 			    
 				do 
 				{ 
@@ -112,7 +104,7 @@ public class Runner {
 				String textFilePath = input.next();
 				System.out.println();
 
-				process.load(textFilePath, embeddings, googleEmb);
+				process.load(textFilePath, embeddings, googleEmb, outputFile);
 				
 				 do 
 				 { 
@@ -123,21 +115,16 @@ public class Runner {
 			}
 			
 			if(choice == 5) {
-				System.out.print("which word do you want to find ? : ");
-				//String answer = input.next();
 				
-				//process.getEmbedding(answer, embeddings);
-				
-				 do 
-				 { 
-					 System.out.print("Select Option [1-6] : ");
-					 choice = input.nextInt(); 
+				do 
+			    { 
+					System.out.print("Select Option [1-6] : ");
+					choice = input.nextInt(); 
 					    
-			     }while(choice < 1 || choice > 6);
+			    }while(choice < 1 || choice > 6);
 			}
 			
 			if(choice == 6) {
-				System.out.println(outputFile);
 				
 				 do 
 				 { 
@@ -161,7 +148,6 @@ public class Runner {
 		*/
 	}
 	
-
 	
 	/*
 	 *  Terminal Progress Meter
@@ -220,4 +206,8 @@ public class Runner {
         //Once the meter reaches its max, move to a new line.
         if (done == total) System.out.println("\n");
     }
+
+
+
+
 }

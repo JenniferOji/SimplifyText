@@ -1,7 +1,9 @@
 package ie.atu.sw;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -13,7 +15,6 @@ public class GoogleEmbeddings {
 
     ArrayList<String> googleWords = new ArrayList<>();
     ConcurrentHashMap<String, double[]> googleWordEmbeddings = new ConcurrentHashMap<>();
-
 
 	 /**
      * //A method that when called reads the content of the embedding file until there's no lines left 
@@ -29,20 +30,9 @@ public class GoogleEmbeddings {
 				//putting the words into a word array  - trim to remove any extra spaces or newlines
                 googleWords.add(word.trim()); 
                 
-              //splitting the doubles associated with each word into an array of doubles 
-                //the loop iterates through each value in sections(each word) and parses it as a double
-                
-                //printing out the values in the google1000 file 
-                /*for (int i = 0; i < googleWords.size(); i++) {
-                    System.out.println(googleWords.get(i));
-                }*/
-                
-               // embeddings.find(word, googleWordEmbeddings);
-                getEmbedding(word, embeddings);
-
+                getEmbedding(word, embeddings); //getting the embedding values for each word in the array 
 			}
             System.out.println("Google1000 file loaded");
-
 		}
 		
 		catch (Exception e) {

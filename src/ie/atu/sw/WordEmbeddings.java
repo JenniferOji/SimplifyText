@@ -9,8 +9,7 @@ import java.io.InputStreamReader;
 import java.util.*;
 
 public class WordEmbeddings {
-	//mapping
-	//takes in a string and an array of doubles and calling each collection wordEmbeddings 
+	//takes in a string and an array of doubles and calling the collection wordEmbeddings 
 	ConcurrentHashMap<String, double[]> wordEmbeddings = new ConcurrentHashMap<>();
 	
     /**
@@ -36,13 +35,8 @@ public class WordEmbeddings {
                     embeddingValues[i - 1] = Double.parseDouble(sections[i]);
                 }
                 wordEmbeddings.put(word, embeddingValues);
-                //printing out the values in the embedding file 
-                //System.out.println(word + " " + Arrays.toString(embeddingValues));
-
-                	
 				}
 			System.out.println("Embeddings file loaded");
-
 		    }
 
 		catch (Exception e) {
@@ -51,16 +45,17 @@ public class WordEmbeddings {
 	}
 	
 	
-	//method to find a word and its embedding 
+	 //method to find a word and its embedding 
 	 public boolean find(String word) {
-	        if (wordEmbeddings.containsKey(word)) {
-	            double[] embeddings = wordEmbeddings.get(word);
-	            System.out.println(word + " " + Arrays.toString(embeddings));
-	            return true;
-	        } else {
-	            System.out.println("Word \"" + word + "\" not found in embeddings.");
-	        }
-			return false;
+	     if (wordEmbeddings.containsKey(word)) {
+	    	 double[] embeddings = wordEmbeddings.get(word);
+	         System.out.println(word + " " + Arrays.toString(embeddings));
+	         return true;
+	     } 
+	     else {
+	    	 System.out.println("Word \"" + word + "\" not found in embeddings.");
+	     }
+		 return false;
 	}
 
 	 

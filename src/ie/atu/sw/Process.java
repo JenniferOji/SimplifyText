@@ -1,30 +1,29 @@
 package ie.atu.sw;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class Process {
-    ArrayList<String> paragraph = new ArrayList<>();
-    private ConcurrentHashMap<String, double[]> text = new ConcurrentHashMap<>();
-    private ConcurrentHashMap<String, String> update = new ConcurrentHashMap<>();
+    ArrayList<String> paragraph = new ArrayList<>();//array list for storing google words 
+    private ConcurrentHashMap<String, double[]> text = new ConcurrentHashMap<>();//hashMap for storing the users word and embedding
+    private ConcurrentHashMap<String, String> updatedText = new ConcurrentHashMap<>();//hashMap for storing the users updated text 
 
-    public void load(String filePath, WordEmbeddings embeddings, GoogleEmbeddings googleEmb) throws Exception {
+    public void load(String filePath, WordEmbeddings embeddings, GoogleEmbeddings googleEmb, String fileName) throws Exception {
 		try (var bReader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath)))) {
 			//each line of the file stored in the lines variable
 			String line;
 		    paragraph.clear();
 	        text.clear();
-	        update.clear();
+	        updatedText.clear();
 	        
-			//String[] words = null;
 			//reads each line in the file until readLine returns null
 			while ((line = bReader.readLine()) != null ) {
 				//https://stackoverflow.com/questions/20226641/split-lines-into-two-strings-using-bufferedreader
@@ -39,10 +38,8 @@ public class Process {
 			}
 			
 			//calling the best match after all the words are loaded 
-			bestMatch(text, googleEmb.googleWordEmbeddings);
-
+			bestMatch(text, googleEmb.googleWordEmbeddings, fileName);
 		}
-		//System.out.println(paragraph);
 	}
     
     //getting the embedding values of the words in the users texts
@@ -50,9 +47,7 @@ public class Process {
 	    double[] gEmbeddings = embeddings.getEmbedding(word);
 	    if (gEmbeddings != null) {
 	        text.put(word, gEmbeddings);
-	       // System.out.println(word + " " + Arrays.toString(gEmbeddings)); // Print or remove as needed
-	    }
-	    
+	    }  
 	    else {
 	       //System.out.println("Embedding for \"" + word + "\" not found.");
 	    }
@@ -68,13 +63,12 @@ public class Process {
 	      dotProduct += userVector[i] * googleVector[i];
 	      normA += Math.pow(userVector[i], 2);
           normB += Math.pow(googleVector[i], 2);
-        }
-	    
+        }  
 	    return dotProduct / (Math.sqrt(normA) * Math.sqrt(normB));
 	}
 	
 	//https://sentry.io/answers/iterate-hashmap-java/
-	public void bestMatch(Map <String, double[]> userMap, Map <String, double[]> googleMap ) {
+	public void bestMatch(Map <String, double[]> userMap, Map <String, double[]> googleMap, String fileName) {
 		//looping for every entry (word) in the users paragraph
 		for(Map.Entry<String, double[]> entry : userMap.entrySet()) {
 			String userWord = entry.getKey(); //key
@@ -93,6 +87,7 @@ public class Process {
 				//calling cosine function to check the similarity 
 				double similarity = cosineSimilarity(userEmbedding, googleEmbedding);
 				
+				//swapping the words if it find one with a higher similarity 
 				if (highestMatch < similarity) {
 					 highestMatch = similarity;
 		             wordMatch = googleWord;
@@ -102,22 +97,46 @@ public class Process {
 			
 			//if there is a match
 			if (wordMatch != null) {
-		          update.put(userWord, wordMatch); 
+		          updatedText.put(userWord, wordMatch); 
 		    }
 		}
 		
 		//a new array to store the new words for the paragraph
 		ArrayList<String> newParagraph = new ArrayList<>();
         
-        //replacing each word with its best match
         //https://www.geeksforgeeks.org/hashmap-getordefaultkey-defaultvalue-method-in-java-with-examples/
         for (String word : paragraph) {
-            String replacement = update.getOrDefault(word, word);
+            //replacing each word with its best match if it has one 
+            String replacement = updatedText.getOrDefault(word, word);
             newParagraph.add(replacement);
         }
         
         System.out.println(String.join(" ", newParagraph));
+        
+        //https://www.w3schools.com/java/java_files_create.asp
+		File file = new File(fileName);
+		boolean fileExist = file.exists();
 
+        try {
+        	FileWriter writer;
+        	if(fileExist) {
+        		writer = new FileWriter(fileName, true);//true for appending data
+        		writer.write("\n" + String.join(" ", newParagraph));
+                System.out.println("Successfully wrote parsed text to the specified file " + fileName);
+        	}
+        	
+        	else {
+        		writer = new FileWriter(fileName);
+        		writer.write(String.join(" ", newParagraph));
+                System.out.println("Successfully wrote parsed text to the specified file " + fileName);
+        	}
+        	writer.close();
+          } 
+        
+        catch (IOException e) {
+            System.out.println("An error has occurred.");
+            e.printStackTrace();
+          }
 
 	}
 }
