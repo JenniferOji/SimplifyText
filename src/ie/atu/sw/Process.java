@@ -6,42 +6,51 @@ import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.nio.file.Files;
+import java.nio.file.Paths;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
 
 public class Process {
     ArrayList<String> paragraph = new ArrayList<>();//array list for storing google words 
     private ConcurrentHashMap<String, double[]> text = new ConcurrentHashMap<>();//hashMap for storing the users word and embedding
     private ConcurrentHashMap<String, String> updatedText = new ConcurrentHashMap<>();//hashMap for storing the users updated text 
 
-    public void load(String filePath, WordEmbeddings embeddings, GoogleEmbeddings googleEmb, String fileName) throws Exception {
-		try (var bReader = new BufferedReader(new InputStreamReader(new FileInputStream(filePath)))) {
-			//each line of the file stored in the lines variable
-			String line;
+    
+	//////////////////////////////////////////////////////////////////
+	//VIRTUAL THREADS 
+	public void load(String filePath, WordEmbeddings embeddings, GoogleEmbeddings googleEmb, String fileName) throws Exception {
+	    try (var pool = Executors.newVirtualThreadPerTaskExecutor()){
 		    paragraph.clear();
 	        text.clear();
 	        updatedText.clear();
 	        
-			//reads each line in the file until readLine returns null
-			while ((line = bReader.readLine()) != null ) {
-				//https://stackoverflow.com/questions/20226641/split-lines-into-two-strings-using-bufferedreader
-				String[] words = line.split("\\s+");
-				
-				//https://stackoverflow.com/questions/2607289/converting-array-to-list-in-java
-				paragraph.addAll(Arrays.asList(words));				
-			}	
-			for(String word : paragraph) {
-				//finding the embedding value for each word in the array 
-				getEmbedding(word, embeddings);
-			}
-			
-			//calling the best match after all the words are loaded 
-			bestMatch(text, googleEmb.googleWordEmbeddings, fileName);
-		}
+	    	Files.lines(Paths.get(filePath))
+	    	.forEach(line -> pool.execute(() -> process(line, embeddings, googleEmb, fileName)));
+	          	
+	   	};
+	     
 	}
-    
+	
+	public void process(String line,  WordEmbeddings embeddings, GoogleEmbeddings googleEmb, String fileName) {
+		String[] words = line.split("\\s+");
+		
+		//https://stackoverflow.com/questions/2607289/converting-array-to-list-in-java
+		paragraph.addAll(Arrays.asList(words));				
+	
+		for(String word : paragraph) {
+			//finding the embedding value for each word in the array 
+			getEmbedding(word, embeddings);
+		}
+		
+		//calling the best match after all the words are loaded 
+		bestMatch(text, googleEmb.googleWordEmbeddings, fileName);
+
+}
+	
     //getting the embedding values of the words in the users texts
 	public void getEmbedding(String word, WordEmbeddings embeddings) {
 	    double[] gEmbeddings = embeddings.getEmbedding(word);
