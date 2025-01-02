@@ -6,14 +6,17 @@ import java.io.PrintWriter;
 import java.util.*;
 
 
-public class Runner{
+public class Menu{
 
 	public static void main(String[] args) throws Exception{
 		
 		//Variables 
 		Scanner input = new Scanner(System.in);
 		int choice;
-	
+		int progress = 25;
+		int numOfChoices = 0;
+		
+		
 		String file1 = "../word-embeddings.txt";
 		String file2 = "../google-1000.txt";
 		
@@ -25,6 +28,7 @@ public class Runner{
         GoogleEmbeddings googleEmb = new GoogleEmbeddings();
         Process process = new Process();
 
+      
 		//You should put the following code into a menu or Menu class
 		System.out.println(ConsoleColour.BLACK);
 		System.out.println("************************************************************");
@@ -37,7 +41,7 @@ public class Runner{
 		System.out.println("(2) Specify Google 1000 File");
 		System.out.println("(3) Specify an Output File (default: ./output.txt)");
 		System.out.println("(4) Execute, Analyse and Report");
-		System.out.println("(5) Optional Extras...");
+		System.out.println("(5) Progress Meter");
 		System.out.println("(6) Quit");
 		
 		System.out.print(ConsoleColour.BLACK);
@@ -52,13 +56,19 @@ public class Runner{
 		do 
 		{
 			if(choice == 1) {
-				System.out.print("Please specify the path to the embeddings file: ");
-				//String embeddingFilePath = input.next();
+				System.out.println("************************************************************");
+				System.out.println("*      Please specify the path to the embeddings file      *");
+				System.out.println("************************************************************");
+				System.out.print("Input : ");
+				
+//				String embeddingFilePath = input.next();
 				System.out.println();
+	
 				String embeddingFilePath = file1;
-
 				embeddings.load(embeddingFilePath);
 				
+	    		//updating the progress value 
+				numOfChoices ++;
 				do 
 			    { 
 					System.out.print("Select Option [1-6] : ");
@@ -68,11 +78,18 @@ public class Runner{
 			}
 			
 			if(choice == 2) {
-				System.out.print("Please specify the path to the Google 1000 file: ");
+				System.out.println("************************************************************");
+				System.out.println("*     Please specify the path to the Google 1000 file      *");
+				System.out.println("************************************************************");
+				System.out.print("Input : ");
+				
 				//String googleFilePath = input.next();
 				String googleFilePath = file2;
 				System.out.println();
 				googleEmb.load(googleFilePath, embeddings);
+				
+				//updating the progress value 
+				numOfChoices ++;
 				do 
 			    { 
 				    System.out.print("Select Option [1-6] : ");
@@ -82,7 +99,11 @@ public class Runner{
 			}
 			
 			if(choice == 3) {
-				System.out.print("Please specify an output file name(./output.txt): ");
+				System.out.println("************************************************************");
+				System.out.println("*     Please specify an output file name(./output.txt)     *");
+				System.out.println("************************************************************");
+				
+				System.out.print("Input : ");
 				outputFile  = input.next();
 				outputFile = outputFile + ".txt";
 				System.out.println(outputFile);
@@ -90,6 +111,7 @@ public class Runner{
 				//content already been written will be output to the file  
 			    //open_file = true;
 			    
+							
 				do 
 				{ 
 					System.out.print("Select Option [1-6] : ");
@@ -99,25 +121,45 @@ public class Runner{
 			}
 			
 			if(choice == 4) {
-				System.out.print("Please specify the path to the text file: ");
+				System.out.println("************************************************************");
+				System.out.println("*         Please specify the path to the text file         * ");
+				System.out.println("************************************************************");
+				System.out.print("Input : ");
+
 				String textFilePath = input.next();
 				System.out.println();
 
 				process.load(textFilePath, embeddings, googleEmb, outputFile);
 				
-				 do 
-				 { 
-					 System.out.print("Select Option [1-6] : ");
-					 choice = input.nextInt(); 
-					    
-			     }while(choice < 1 || choice > 6);
+				//updating the progress value 
+				numOfChoices ++;
+				do 
+				{ 
+					System.out.print("Select Option [1-6] : ");
+				 	choice = input.nextInt(); 
+			    }while(choice < 1 || choice > 6);
 			}
 			
 			if(choice == 5) {
-				
+				System.out.println("************************************************************");
+				System.out.println("*                      Progress Meter                      * ");
+				System.out.println("************************************************************");
+				//outputting the progress meter 
+	      		System.out.print(ConsoleColour.YELLOW);	//Change the colour of the console text
+	      		
+	      		//if the number of choices is greater than 4 it still outputs 100%
+	      		if(numOfChoices > 4) {
+	      			numOfChoices = 4;
+	      		}
+	      		
+      			for (int i =0 ; i < progress * numOfChoices ; i++) {		//The loop equates to a sequence of processing steps
+          			printProgress(i + 1 , 100); 		//After each (some) steps, update the progress meter
+      				Thread.sleep(10);	
+      				//Slows things down so the animation is visible 
+      			}
 				do 
 			    { 
-					System.out.print("Select Option [1-6] : ");
+					System.out.print("\n" + ConsoleColour.BLACK + "Select Option [1-6] : ");
 					choice = input.nextInt(); 
 					    
 			    }while(choice < 1 || choice > 6);
