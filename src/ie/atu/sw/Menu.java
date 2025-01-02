@@ -41,7 +41,9 @@ public class Menu{
 		System.out.println("(2) Specify Google 1000 File");
 		System.out.println("(3) Specify an Output File (default: ./output.txt)");
 		System.out.println("(4) Execute, Analyse and Report");
+		System.out.println("(5) Extras");
 		System.out.println("(5) Progress Meter");
+
 		System.out.println("(6) Quit");
 		
 		System.out.print(ConsoleColour.BLACK);
@@ -141,25 +143,75 @@ public class Menu{
 			}
 			
 			if(choice == 5) {
-				System.out.println("************************************************************");
-				System.out.println("*                      Progress Meter                      * ");
-				System.out.println("************************************************************");
-				//outputting the progress meter 
-	      		System.out.print(ConsoleColour.YELLOW);	//Change the colour of the console text
-	      		
-	      		//if the number of choices is greater than 4 it still outputs 100%
-	      		if(numOfChoices > 4) {
-	      			numOfChoices = 4;
-	      		}
-	      		
-      			for (int i =0 ; i < progress * numOfChoices ; i++) {		//The loop equates to a sequence of processing steps
-          			printProgress(i + 1 , 100); 		//After each (some) steps, update the progress meter
-      				Thread.sleep(10);	
-      				//Slows things down so the animation is visible 
-      			}
+				int option;
+				String colour = "BLACK";
+				System.out.println("(1) Progress meter");
+				System.out.println("(2) Change console colour");
+				
+				System.out.print("Input: ");
+				option = input.nextInt();
+
+				if(option == 1) {
+					System.out.println("************************************************************");
+					System.out.println("*                      Progress Meter                      * ");
+					System.out.println("************************************************************");
+					//outputting the progress meter 		      		
+		      		//if the number of choices is greater than 4 it outputs 100%
+		      		if(numOfChoices > 4) {
+		      			numOfChoices = 4;
+		      		}
+		      		
+	      			for (int i =0 ; i < progress * numOfChoices ; i++) {//The loop equates to a sequence of processing steps
+	          			printProgress(i + 1 , 100);//After each (some) steps, update the progress meter
+	      				Thread.sleep(10);	
+	      				//Slows things down so the animation is visible 
+	      			}
+	      			
+	      			System.out.print(ConsoleColour.BLACK);
+				}
+				
+				if(option == 2) {
+					System.out.println("************************************************************");
+					System.out.println("*            CHANGE CONSOLE BACKGROUND COLOUR              *");
+					System.out.println("************************************************************");
+			        System.out.println("(black, red, green, yellow, blue, purple, cyan, white) ");
+			        System.out.print("Input: ");
+			        colour = input.next().toLowerCase(); 
+
+			            //changing the background colour based on the users input;
+			            switch (colour) {
+			                case "red":
+			                    System.out.print(ConsoleColour.RED_BACKGROUND);
+			                    break;
+			                case "green":
+			                    System.out.print(ConsoleColour.GREEN_BACKGROUND);
+			                    break;
+			                case "yellow":
+			                    System.out.print(ConsoleColour.YELLOW_BACKGROUND);
+			                    break;
+			                case "blue":
+			                    System.out.print(ConsoleColour.BLUE_BACKGROUND);
+			                    break;
+			                case "purple":
+			                    System.out.print(ConsoleColour.PURPLE_BACKGROUND);
+			                    break;
+			                case "cyan":
+			                    System.out.print(ConsoleColour.CYAN_BACKGROUND);
+			                    break;
+			                case "white":
+			                    System.out.print(ConsoleColour.WHITE_BACKGROUND);
+			                    break;
+			                //if the input is invalid it returns the background to the normal colour 
+			                default:
+			                    System.out.println("Not a valid background colour. Restoring to default colour");
+			                    System.out.println(ConsoleColour.RESET);
+			                    break;
+			            }
+				}
+				
 				do 
 			    { 
-					System.out.print("\n" + ConsoleColour.BLACK + "Select Option [1-6] : ");
+					System.out.print("\nSelect Option [1-6] : ");
 					choice = input.nextInt(); 
 					    
 			    }while(choice < 1 || choice > 6);
